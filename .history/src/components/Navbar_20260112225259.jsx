@@ -48,7 +48,7 @@ const Navbar = () => {
               size={26}
               className="cursor-pointer hover:text-[#5a8139]"
             />
-            <button className="bg-white text-[#3b5d50] px-6 py-2 rounded-lg font-semibold hover:bg-gray-200 transition">
+            <button className="bg-white text-[#3b5d50] px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition">
                 Login
               </button>
           </Link>
