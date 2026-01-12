@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 import { FaHome, FaBook, FaShoppingBag } from "react-icons/fa";
 
 const categories = [
