@@ -87,7 +87,7 @@ const Register = () => {
      <div className="w-full max-w-[1200px] h-auto grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6 items-center bg-cover bg-center rounded-lg overflow-hidden shadow-xl">
       
        {/* Form Section */}
-       <div className="h-full rounded-l-xl flex items-center justify-center bg-[#6f817b76] p-6 md:p-10">
+       <div className="h-full rounded-xl flex items-center justify-center bg-[#2f4f43] p-6 md:p-10">
          <form  className="w-full max-w-md space-y-5">
            <h2 className="text-3xl font-bold mb-4 text-center text-gray-800">Register</h2>
 

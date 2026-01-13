@@ -1,85 +1,86 @@
-// import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-// import { toast } from 'react-toastify';
-// import axios from 'axios';
-// import { useNavigate } from 'react-router-dom';
-// import { updateProfile } from 'firebase/auth';
+import { AuthContext } from '../Provider/AuthProvider';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { updateProfile } from 'firebase/auth';
 import loginAnimation from '../json/success.json';
 import Lottie from 'lottie-react';
 
 
 const Register = () => {
-//  const [preview, setPreview] = useState(null);
-//  const [showPassword, setShowPassword] = useState(false);
-//  const [error, setError] = useState("");
-//  const { handelWithRegister, SetUser } = useContext(AuthContext);
-//  const navigate = useNavigate();
+ const [preview, setPreview] = useState(null);
+ const [showPassword, setShowPassword] = useState(false);
+ const [error, setError] = useState("");
+ const { handelWithRegister, SetUser } = useContext(AuthContext);
+ const navigate = useNavigate();
 
 
-//  const handleRegister = async (e) => {
-//   e.preventDefault();
-//   const form = e.target;
-//   const name = form.name.value;
-//   const email = form.email.value;
-//   const password = form.password.value;
-//   const image = form.image.files[0];
+ const handleRegister = async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const name = form.name.value;
+  const email = form.email.value;
+  const password = form.password.value;
+  const image = form.image.files[0];
 
-//   setError("");
+  setError("");
 
-//   try {
-//     // Step 1: Firebase Register
-//     const result = await handelWithRegister(email, password);
+  try {
+    // Step 1: Firebase Register
+    const result = await handelWithRegister(email, password);
 
-//     // Step 2: Image Upload
-//     const formData = new FormData();
-//     formData.append("image", image);
+    // Step 2: Image Upload
+    const formData = new FormData();
+    formData.append("image", image);
 
-//     const imgRes = await axios.post(
-//       `https://api.imgbb.com/1/upload?key=8be0cdd4b85b2bb02d8b738407647b48`,
-//       formData
-//     );
+    const imgRes = await axios.post(
+      `https://api.imgbb.com/1/upload?key=8be0cdd4b85b2bb02d8b738407647b48`,
+      formData
+    );
 
-//     const imageUrl = imgRes.data.data.url;
+    const imageUrl = imgRes.data.data.url;
 
-//     // Step 3: Update Profile
-//     await updateProfile(result.user, {
-//       displayName: name,
-//       photoURL: imageUrl,
-//     });
+    // Step 3: Update Profile
+    await updateProfile(result.user, {
+      displayName: name,
+      photoURL: imageUrl,
+    });
 
-//     // Step 4: Save to Database
-//     await axios.post("https://resturent-management-server-three.vercel.app/users", {
-//       name,
-//       email,
-//       image: imageUrl,
-//       role: "user",
-//     });
+    // Step 4: Save to Database
+    await axios.post("https://resturent-management-server-three.vercel.app/users", {
+      name,
+      email,
+      image: imageUrl,
+      role: "user",
+    });
 
-//     // Step 5: Set Context
-//     SetUser({
-//       email,
-//       displayName: name,
-//       photoURL: imageUrl,
-//     });
+    // Step 5: Set Context
+    SetUser({
+      email,
+      displayName: name,
+      photoURL: imageUrl,
+    });
 
-//     toast.success("Registration successful!");
-//     form.reset();
-//     setPreview(null);
-//     navigate("/");
-//   } catch (err) {
-//     console.log("Registration error: ", err);
-//     toast.error("Registration failed!");
-//   }
-// };
+    toast.success("Registration successful!");
+    form.reset();
+    setPreview(null);
+    navigate("/");
+  } catch (err) {
+    console.log("Registration error: ", err);
+    toast.error("Registration failed!");
+  }
+};
 
 
 
-//  const handleImageChange = (e) => {
-//    const file = e.target.files[0];
-//    if (file) {
-//      setPreview(URL.createObjectURL(file));
-//    }
-//  };
+ const handleImageChange = (e) => {
+   const file = e.target.files[0];
+   if (file) {
+     setPreview(URL.createObjectURL(file));
+   }
+ };
 
 
  return (
@@ -87,8 +88,8 @@ const Register = () => {
      <div className="w-full max-w-[1200px] h-auto grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6 items-center bg-cover bg-center rounded-lg overflow-hidden shadow-xl">
       
        {/* Form Section */}
-       <div className="h-full rounded-l-xl flex items-center justify-center bg-[#6f817b76] p-6 md:p-10">
-         <form  className="w-full max-w-md space-y-5">
+       <div className="h-full rounded-xl flex items-center justify-center bg-[#dfcac3] p-6 md:p-10">
+         <form onSubmit={handleRegister} className="w-full max-w-md space-y-5">
            <h2 className="text-3xl font-bold mb-4 text-center text-gray-800">Register</h2>
 
 
@@ -127,12 +128,12 @@ const Register = () => {
                id="image"
                accept="image/*"
                required
-            //    onChange={handleImageChange}
+               onChange={handleImageChange}
                className="w-full border rounded-md bg-gray-100 focus:ring-2 focus:ring-blue-500"
              />
-             {/* {preview && (
+             {preview && (
                <img src={preview} alt="Preview" className="mt-2 w-24 h-24 object-cover rounded-full border" />
-             )} */}
+             )}
            </div>
 
 
@@ -140,8 +141,7 @@ const Register = () => {
            <div className="relative">
              <label htmlFor="password" className="block mb-1 font-medium">Password</label>
              <input
-            //    type={showPassword ? "text" : "password"}
-            type='password'
+               type={showPassword ? "text" : "password"}
                name="password"
                id="password"
                required
@@ -149,15 +149,15 @@ const Register = () => {
              />
              <span
                className="absolute top-10 right-3 cursor-pointer text-gray-600"
-            //    onClick={() => setShowPassword(!showPassword)}
+               onClick={() => setShowPassword(!showPassword)}
              >
-               {/* {showPassword ? <FaEyeSlash /> : <FaEye />} */}
+               {showPassword ? <FaEyeSlash /> : <FaEye />}
              </span>
            </div>
 
 
            {/* Error Message */}
-           {/* {error && <p className="text-red-600 text-sm">{error}</p>} */}
+           {error && <p className="text-red-600 text-sm">{error}</p>}
 
 
            {/* Submit Button */}
