@@ -59,7 +59,7 @@ const Register = () => {
     console.log(name,email,imageUrl);
 
     // Step 4: Save to Database
-    await axios.post(`${import.meta.env.VITE_URL}/users`, {
+    await axios.post("http://localhost:5000/users", {
       name,
       email,
       image: imageUrl,

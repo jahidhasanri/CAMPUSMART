@@ -1,12 +1,13 @@
 import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
 import React, { createContext, useEffect, useState } from 'react';
 import { auth } from '../firebase.config';
-// import axios from 'axios';
+import axios from 'axios';
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext= createContext(null)
 const AuthProvider = ({children}) => {
     const [user,SetUser]=useState(null);
     const [loader,SetLoader]=useState(true);
+  
 
 //  useEffect(() => {
 //   if (user?.email) {   

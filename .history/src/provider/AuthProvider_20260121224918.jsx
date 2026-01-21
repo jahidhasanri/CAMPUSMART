@@ -7,6 +7,7 @@ export const AuthContext= createContext(null)
 const AuthProvider = ({children}) => {
     const [user,SetUser]=useState(null);
     const [loader,SetLoader]=useState(true);
+  console.log(user);
 
 //  useEffect(() => {
 //   if (user?.email) {   

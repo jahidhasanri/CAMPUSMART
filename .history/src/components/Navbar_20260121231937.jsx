@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, handelLogout } = useContext(AuthContext);
-  console.log(user?.photoURL);
+  console.log(user);
   const navigate = useNavigate();
   const handelSignOut = async (e) => {
     e.preventDefault();

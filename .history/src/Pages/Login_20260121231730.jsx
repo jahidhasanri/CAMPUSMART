@@ -19,6 +19,7 @@ const Login = () => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
+    console.log(email,password);
     handleLoginwithEmail(email, password)
       .then((result) => {
         if (result?.user) {
@@ -48,9 +49,9 @@ const Login = () => {
           image: result?.user?.photoURL
         };
 
-        axios.post(`${import.meta.env.VITE_URL}/users`, userInfo)
+        axios.post("https://resturent-management-server-three.vercel.app/users", userInfo)
           .then(res => {
-            console.log("User saved to DB:",res);
+            console.log("User saved to DB:");
           })
           .catch(err => {
             console.error("DB Save Error:", err);
@@ -77,7 +78,7 @@ const Login = () => {
     <div className="w-full lg:w-1/2 xl:w-1/2 p-4 sm:p-6 md:p-10 mr-3 bg-slate-200 flex flex-col justify-center">
       <h1 className="text-2xl sm:text-xl text-[#db2525] font-bold text-center mb-6">WELCOME BACK TO CAMPUSMART</h1>
       <h3 className="text-3xl sm:text-2xl font-bold text-center mb-6">LOGIN NOW!</h3>
-      <form onSubmit={handelLogin} className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4">
         <div className=" w-full">
           <div>
             <label className="label ">
@@ -117,7 +118,7 @@ const Login = () => {
           </label>
         </div>
 
-        <button className="btn bg-[#524ffc] h-[50px] rounded-[5px] w-full mt-2 sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/2 ">Login</button>
+        <button onClick={handelLogin} className="btn bg-[#524ffc] h-[50px] rounded-[5px] w-full mt-2 sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/2 ">Login</button>
 
         <p className=" mt-4 text-sm">
           Don't have an account?{' '}

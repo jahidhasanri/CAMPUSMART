@@ -26,15 +26,6 @@ const Register = () => {
   const image = form.image.files[0];
 
   setError("");
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-
-  if (!passwordRegex.test(password)) {
-    setError(
-      "Password must be at least 6 characters and include uppercase, lowercase, number & special character."
-    );
-    return;
-  }
 
   try {
     // Step 1: Firebase Register
@@ -59,7 +50,7 @@ const Register = () => {
     console.log(name,email,imageUrl);
 
     // Step 4: Save to Database
-    await axios.post(`${import.meta.env.VITE_URL}/users`, {
+    await axios.post("http://localhost:5000/users", {
       name,
       email,
       image: imageUrl,

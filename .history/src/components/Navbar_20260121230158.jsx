@@ -1,25 +1,12 @@
 import { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { TiShoppingCart } from "react-icons/ti";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 import { AuthContext } from "../provider/AuthProvider";
-import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user, handelLogout } = useContext(AuthContext);
-  console.log(user?.photoURL);
-  const navigate = useNavigate();
-  const handelSignOut = async (e) => {
-    e.preventDefault();
-    try {
-      await handelLogout();
-      toast.success("Logout successful!");
-      setTimeout(() => navigate("/login"), 1000);
-    } catch (error) {
-      toast.error(`Logout failed: ${error.message}`);
-    }
-  };
+  const { user, logOut } = useContext(AuthContext);
 
   const navLinks = [
     { name: "HOME", path: "/" },
@@ -73,7 +60,7 @@ const Navbar = () => {
                   className="w-[40px] h-[40px] rounded-full object-cover"
                 />
                 <button
-                  onClick={handelSignOut}
+                  onClick={logOut}
                   className="bg-red-500 px-5 py-2 rounded-lg hover:bg-red-600 transition"
                 >
                   Logout
@@ -121,7 +108,7 @@ const Navbar = () => {
               {user ? (
                 <button
                   onClick={() => {
-                    handelSignOut();
+                    logOut();
                     setMenuOpen(false);
                   }}
                   className="bg-red-500 px-4 py-2 rounded"

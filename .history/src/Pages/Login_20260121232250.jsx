@@ -19,6 +19,7 @@ const Login = () => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
+    console.log(email,password);
     handleLoginwithEmail(email, password)
       .then((result) => {
         if (result?.user) {
@@ -48,7 +49,7 @@ const Login = () => {
           image: result?.user?.photoURL
         };
 
-        axios.post(`${import.meta.env.VITE_URL}/users`, userInfo)
+        axios.post("https://resturent-management-server-three.vercel.app/users", userInfo)
           .then(res => {
             console.log("User saved to DB:",res);
           })
