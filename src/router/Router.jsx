@@ -3,7 +3,7 @@ import Home from "../Pages/Home.jsx";
 import Main from "../components/Main.jsx";
 import Login from "../Pages/Login.jsx";
 import Register from "../Pages/Register.jsx";
-import Posts from "../Pages/Posts.jsx";
+import CreatePost from "../Pages/Creator/CreatePost.jsx";
 
 
 const Router = createBrowserRouter([
@@ -24,8 +24,8 @@ const Router = createBrowserRouter([
           element:<Register></Register>
         },
         {
-          path:"/posts",
-          element:<Posts></Posts>
+          path:"/create-post",
+          Component:CreatePost
         }
     ]
   },
