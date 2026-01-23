@@ -8,7 +8,7 @@ import { AuthContext } from "../provider/AuthProvider";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const {user}=useContext(AuthContext);
-  console.log(user);
+  // console.log(user);
 
   const navLinks = [
     { name: "HOME", path: "/" },

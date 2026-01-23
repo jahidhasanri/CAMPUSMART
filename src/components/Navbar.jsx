@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, handelLogout } = useContext(AuthContext);
-  console.log(user?.photoURL);
+  // console.log(user?.photoURL);
   const navigate = useNavigate();
   const handelSignOut = async (e) => {
     e.preventDefault();
@@ -23,7 +23,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "HOME", path: "/" },
-    { name: "POSTS", path: "/products" },
+    { name: "CREATE POST", path: "/create-post" },
     { name: "SERVICES", path: "/services" },
     { name: "ABOUT US", path: "/about" },
     { name: "BLOG", path: "/blog" },
