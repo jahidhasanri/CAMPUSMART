@@ -142,7 +142,7 @@ const Posts = () => {
          <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
             <IoLocationSharp />
             <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedPost.location)}`}
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(post.location)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="truncate w-full hover:underline block"
