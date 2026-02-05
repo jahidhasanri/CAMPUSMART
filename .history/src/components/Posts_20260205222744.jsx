@@ -139,18 +139,18 @@ const Posts = () => {
         </p>
 
         {/* Location */}
-         <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
-            <IoLocationSharp />
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedPost.location)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="truncate w-full hover:underline block"
-              title={selectedPost.location} // Hover করলে full text দেখাবে
-            >
-              {selectedPost.location}
-            </a>
-          </p>
+        <p className="text-gray-500 mt-1 flex items-center gap-1">
+          <IoLocationSharp />
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedPost.location)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline"
+            title={selectedPost.location}
+          >
+            {selectedPost.location}
+          </a>
+        </p>
 
         <p className="text-gray-600 mt-3 leading-relaxed">{selectedPost.description}</p>
 

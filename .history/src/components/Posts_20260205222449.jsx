@@ -105,79 +105,52 @@ const Posts = () => {
 
 
       {/* Modal Section */}
-     <AnimatePresence>
-  {selectedPost && (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4 backdrop-blur-sm"
-    >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-white rounded-2xl max-w-lg w-full p-6 relative shadow-2xl"
-      >
-        <button
-          onClick={() => setSelectedPost(null)}
-          className="absolute top-4 right-4 text-gray-400 hover:text-black text-xl"
-        >
-          ✕
-        </button>
-
-        {/* Image with border & shadow */}
-        <img
-          src={selectedPost.image}
-          className="w-full h-56 object-cover rounded-xl mb-4 border border-gray-200 shadow-md"
-        />
-
-        <h3 className="text-2xl font-bold text-gray-800">{selectedPost.title}</h3>
-
-        <p className="text-[#3C5D50] font-semibold mt-1">
-          Category: {selectedPost.category}
-        </p>
-
-        {/* Location */}
-         <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
-            <IoLocationSharp />
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedPost.location)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="truncate w-full hover:underline block"
-              title={selectedPost.location} // Hover করলে full text দেখাবে
+      <AnimatePresence>
+        {selectedPost && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-2xl max-w-lg w-full p-6 relative shadow-2xl"
             >
-              {selectedPost.location}
-            </a>
-          </p>
+              <button
+                onClick={() => setSelectedPost(null)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-black text-xl"
+              >
+                ✕
+              </button>
 
-        <p className="text-gray-600 mt-3 leading-relaxed">{selectedPost.description}</p>
+              <img
+                src={selectedPost.image}
+                className="w-full h-56 object-cover rounded-xl mb-4"
+              />
 
-        <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-          <p className="text-sm text-gray-500 italic">
-            Posted by: {selectedPost.postedBy?.ownerName}
-          </p>
-          <p className="font-bold text-lg text-[#3C5D50] mt-1">
-            Price: {selectedPost.price} BDT
-          </p>
-          {/* Contact Number */}
-          <p className="text-sm text-gray-700 mt-1">
-            Contact: <a href={`tel:${selectedPost.number}`} className="font-medium">{selectedPost.number}</a>
-          </p>
-        </div>
+              <h3 className="text-2xl font-bold text-gray-800">{selectedPost.title}</h3>
+              <p className="text-[#3C5D50] font-semibold mt-1">Category: {selectedPost.category}</p>
+              
+              <p className="text-gray-600 mt-3 leading-relaxed">{selectedPost.description}</p>
+              
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm text-gray-500 italic">Posted by: {selectedPost.postedBy?.ownerName}</p>
+                <p className="font-bold text-lg text-[#3C5D50] mt-1">Price: {selectedPost.price} BDT</p>
+              </div>
 
-        <a
-          href={`tel:${selectedPost.number}`}
-          className="mt-6 block w-full py-3 rounded-xl bg-[#3C5D50] text-white text-center font-semibold shadow-lg"
-        >
-          Call Seller ({selectedPost.number})
-        </a>
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
-
+              <a
+                href={`tel:${selectedPost.number}`}
+                className="mt-6 block w-full py-3 rounded-xl bg-[#3C5D50] text-white text-center font-semibold shadow-lg"
+              >
+                Call Seller ({selectedPost.number})
+              </a>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

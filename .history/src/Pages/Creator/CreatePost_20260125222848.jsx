@@ -150,21 +150,10 @@ const CreatePost = () => {
               Contact Number
             </label>
             <input
-  {...register("number", {
-    required: "Number is required",
-    pattern: {
-      value: /^(\+8801|01)[3-9][0-9]{8}$/, 
-      message: "Enter a valid Bangladesh phone number"
-    }
-  })}
-  className="w-full p-2.5 border border-gray-300 rounded-lg outline-none focus:border-[#3C5D50]"
-  placeholder="+8801123456789"
-/>
-{errors.number && (
-  <span className="text-red-500 text-xs mt-1">
-    {errors.number.message}
-  </span>
-)}
+              {...register("number", {required : "number is required"})}
+              className="w-full p-2.5 border border-gray-300 rounded-lg outline-none focus:border-[#3C5D50]"
+              placeholder="+8801123456789"
+            ></input>
           </div>
 
           {/* Image URL */}

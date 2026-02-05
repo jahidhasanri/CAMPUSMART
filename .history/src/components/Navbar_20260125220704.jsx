@@ -23,13 +23,12 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "HOME", path: "/" },
-    { name: "ALL POSTS", path: "/all-posts" },
     { name: "CREATE POST", path: "/create-post" },
     { name: "SERVICES", path: "/services" },
     { name: "ABOUT US", path: "/about" },
     { name: "BLOG", path: "/blog" },
     { name: "CONTACT", path: "/contact" },
-    
+    { name: "ALL POSTS", path: "/all-posts" },
   ];
 
   return (

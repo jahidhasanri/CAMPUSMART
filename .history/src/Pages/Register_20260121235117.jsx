@@ -72,6 +72,7 @@ const Register = () => {
       displayName: name,
       photoURL: imageUrl,
     });
+
     toast.success("Registration successful!");
     form.reset();
     setPreview(null);
