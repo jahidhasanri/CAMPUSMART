@@ -5,6 +5,8 @@ import Login from "../Pages/Login.jsx";
 import Register from "../Pages/Register.jsx";
 import CreatePost from "../Pages/Creator/CreatePost.jsx";
 import Posts from "../Pages/Posts/Posts.jsx";
+import DashboardLayout from "../Pages/Dashboard/DashboardLayout.jsx";
+import Services from "../Pages/services/Services.jsx";
 
 
 const Router = createBrowserRouter([
@@ -31,9 +33,17 @@ const Router = createBrowserRouter([
         {
           path:"/create-post",
           Component:CreatePost
+        },
+        {
+          path:"/services",
+          Component:Services
         }
     ]
   },
+  {
+    path:"/dashboard",
+    Component:DashboardLayout
+  }
 ]);
 
 export default Router;

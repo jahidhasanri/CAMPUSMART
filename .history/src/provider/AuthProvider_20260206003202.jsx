@@ -8,7 +8,6 @@ import {
 } from "firebase/auth";
 import React, { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase.config";
-import axios from "axios";
 // import axios from 'axios';
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext(null);
@@ -17,21 +16,21 @@ const AuthProvider = ({ children }) => {
   const [loader, SetLoader] = useState(true);
   console.log(user)
 
-   useEffect(() => {
-    if (user?.email) {
-      const fetchUser = async () => {
-        try {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/users?email=${user.email}`);
-          SetUser(response.data);
-        } catch (error) {
-          console.error("Error fetching user:", error);
-        }
-      };
-      fetchUser();
-    }
-  }, [user?.email]);
+  //  useEffect(() => {
+  //   if (user?.email) {
+  //     const fetchUser = async () => {
+  //       try {
+  //         const response = await axios.get(`https://resturent-management-server-three.vercel.app/users?email=${user.email}`);
+  //         SetUser(response.data);
+  //       } catch (error) {
+  //         console.error("Error fetching user:", error);
+  //       }
+  //     };
+  //     fetchUser();
+  //   }
+  // }, [user?.email]);
 
-  console.log(user);
+  // console.log(user);
 
   const provider = new GoogleAuthProvider();
   const handelWithRegister = (email, password) => {
