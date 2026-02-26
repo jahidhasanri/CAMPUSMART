@@ -103,6 +103,10 @@ const Posts = () => {
   ))}
 </motion.div>
 
+<Link to="/all-posts" className="block text-center mx-auto  py-2 w-[150px] rounded-lg mt-12 bg-[#3C5D50] text-white font-semibold hover:opacity-90 transition">
+  View More Posts 
+</Link>
+
 
       {/* Modal Section */}
      <AnimatePresence>
