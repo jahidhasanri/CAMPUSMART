@@ -1,4 +1,5 @@
 import { FaFacebook, FaLinkedin, FaGithub } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -24,10 +25,10 @@ const Footer = () => {
               Quick Links
             </h3>
             <ul className="space-y-2 text-sm">
-              <li className="hover:text-white cursor-pointer">Home</li>
-              <li className="hover:text-white cursor-pointer">Browse Items</li>
-              <li className="hover:text-white cursor-pointer">Post Item</li>
-              <li className="hover:text-white cursor-pointer">Login / Register</li>
+              <li><Link to="/" className="hover:text-white cursor-pointer">Home</Link></li>
+              <li><Link to="/all-posts" className="hover:text-white cursor-pointer">Browse Items</Link></li>
+              <li><Link to="/post-item" className="hover:text-white cursor-pointer">Post Item</Link></li>
+              <li><Link to="/login" className="hover:text-white cursor-pointer">Login / Register</Link></li>
             </ul>
           </div>
 
@@ -52,9 +53,9 @@ const Footer = () => {
             <p className="text-sm mb-4">📞 +880 1234-567890</p>
 
             <div className="flex gap-4 text-xl">
-              <FaFacebook className="hover:text-white cursor-pointer" />
-              <FaLinkedin className="hover:text-white cursor-pointer" />
-              <FaGithub className="hover:text-white cursor-pointer" />
+              <Link to={'https://www.facebook.com/BUBTOfficial'} target="_blank"><FaFacebook className="hover:text-white cursor-pointer" /></Link>
+              <Link to={'https://www.linkedin.com/school/bangladesh-university-of-business-and-technology/'} target="_blank"><FaLinkedin className="hover:text-white cursor-pointer" /></Link>
+              <Link to={'https://github.com/'} target="_blank"><FaGithub className="hover:text-white cursor-pointer" /></Link>
             </div>
           </div>
 

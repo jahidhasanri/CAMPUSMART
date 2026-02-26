@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const slides = [
   {
@@ -49,12 +50,12 @@ const Banner = () => {
             </p>
 
             <div className="flex gap-4 flex-wrap">
-              <button className="bg-white text-[#3b5d50] px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition">
+              <Link to="/all-posts" className="bg-white text-[#3b5d50] px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition">
                 Browse Items
-              </button>
-              <button className="border border-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-[#3b5d50] transition">
+              </Link>
+              <Link to={"/create-post"} className="border border-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-[#3b5d50] transition">
                 Post an Item
-              </button>
+              </Link>
             </div>
           </div>
 

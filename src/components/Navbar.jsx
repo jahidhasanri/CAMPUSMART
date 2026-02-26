@@ -27,7 +27,6 @@ const Navbar = () => {
     { name: "CREATE POST", path: "/create-post" },
     { name: "SERVICES", path: "/services" },
     { name: "ABOUT US", path: "/about" },
-    { name: "BLOG", path: "/blog" },
     { name: "CONTACT", path: "/contact" },
     { name: "DASHBOARD", path: "/dashboard" },
     

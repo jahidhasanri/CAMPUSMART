@@ -7,6 +7,7 @@ import CreatePost from "../Pages/Creator/CreatePost.jsx";
 import Posts from "../Pages/Posts/Posts.jsx";
 import DashboardLayout from "../Pages/Dashboard/DashboardLayout.jsx";
 import Services from "../Pages/services/Services.jsx";
+import AboutUs from "../Pages/aboutUs/AboutUs.jsx";
 
 
 const Router = createBrowserRouter([
@@ -37,6 +38,10 @@ const Router = createBrowserRouter([
         {
           path:"/services",
           Component:Services
+        },
+        {
+          path:"/about",
+          Component:AboutUs
         }
     ]
   },
