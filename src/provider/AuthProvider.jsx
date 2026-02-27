@@ -1,5 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
-/* eslint-disable no-unused-vars */
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -7,100 +5,86 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import React, { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase.config";
 import axios from "axios";
+import useAxios from "../Hooks/useAxios";
 
 export const AuthContext = createContext(null);
+
 const AuthProvider = ({ children }) => {
-  const [firebaseUser, setFirebaseUser] = useState(null);
-const [dbUser, setDbUser] = useState(null);
-  const [loader, SetLoader] = useState(true);
-console.log(firebaseUser?.email)
+  const axiosSecure = useAxios();
 
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const googleProvider = new GoogleAuthProvider();
 
-
-   useEffect(() => {
-    if (firebaseUser?.email) {
-      const fetchUser = async () => {
-        try {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/users?email=${firebaseUser?.email}`);
-          console.log(response)
-          setDbUser(response);
-        } catch (error) {
-          console.error("Error fetching user:", error);
-        }
-      };
-      fetchUser();
-    }
-  }, [firebaseUser?.email]);
-
-  console.log(dbUser)
-
-
-
-
-
-
-
-
-  const provider = new GoogleAuthProvider();
-  const handelWithRegister = (email, password) => {
-    SetLoader(true);
+  const createUser = (email, password) => {
+    setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
-  const handelLogout = () => {
-    SetLoader(true);
-    return signOut(auth);
+
+  const updateUserProfile = (name, photo) => {
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+      photoURL: photo,
+    });
   };
 
-  const handleLoginwithEmail = (email, password) => {
-    SetLoader(true);
+  const login = (email, password) => {
+    setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  const handleLoginWithGoogle = () => {
-    SetLoader(true);
-    return signInWithPopup(auth, provider);
+  const loginWithGoogle = () => {
+    setLoading(true);
+    return signInWithPopup(auth, googleProvider);
   };
 
-  const authInfo = {
-   firebaseUser,
-  dbUser,
-    loader,
-    SetLoader,
-    handelWithRegister,
-    handelLogout,
-    handleLoginwithEmail,
-    handleLoginWithGoogle,
+  const logout = () => {
+    setLoading(true);
+    return signOut(auth);
   };
 
-  // observer
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-  //     if (currentUser) {
-  //       SetUser(currentUser || null);
-  //       SetLoader(false);
-  //     } else {
-  //       SetUser(null);
-  //     }
-  //   });
-  //   return () => {
-  //     unsubscribe();
-  //   };
-  // }, []);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        try {
+          const res = await axiosSecure.get(
+            `/users?email=${currentUser.email}`,
+          );
 
-useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-        setFirebaseUser(currentUser || null);
-        SetLoader(false);
+          const dbUser = res.data[0];
+          setUser({ ...currentUser, ...dbUser });
+          // console.log(user);
+        } catch (err) {
+          console.error("Error fetching db user", err);
+          setUser(currentUser);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setUser(null);
+        setLoading(false);
+      }
     });
-    return () => {
-      unsubscribe();
-    };
+
+    return () => unsubscribe();
   }, []);
 
+  const authInfo = {
+    user,
+    loading,
+    setLoading,
+    createUser,
+    updateUserProfile,
+    login,
+    loginWithGoogle,
+    logout,
+  };
+  // console.log(user);
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );
