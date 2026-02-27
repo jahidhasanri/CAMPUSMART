@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user, handelLogout } = useContext(AuthContext);
+  const { firebaseUser, handelLogout } = useContext(AuthContext);
   // console.log(user?.photoURL);
   const navigate = useNavigate();
   const handelSignOut = async (e) => {
@@ -67,13 +67,18 @@ const Navbar = () => {
               className="cursor-pointer hover:text-[#a7c957]"
             />
 
-            {user ? (
+            {firebaseUser ? (
               <>
                 <img
-                  src={user?.photoURL || "/images/default-user.png"}
-                  alt="profile"
-                  className="w-[40px] h-[40px] rounded-full object-cover"
-                />
+  src={
+    firebaseUser?.photoURL
+      ? firebaseUser.photoURL
+      : "/images/default-user.png"
+  }
+  alt="profile"
+  referrerPolicy="no-referrer"
+  className="w-[40px] h-[40px] rounded-full object-cover"
+/>
                 <button
                   onClick={handelSignOut}
                   className="bg-red-500 px-5 py-2 rounded-lg hover:bg-red-600 transition"
@@ -120,7 +125,7 @@ const Navbar = () => {
             <div className="mt-6 flex flex-col gap-4">
               <TiShoppingCart size={26} />
 
-              {user ? (
+              {firebaseUser ? (
                 <button
                   onClick={() => {
                     handelSignOut();

@@ -43,7 +43,7 @@ const CounterSection = () => {
       <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
         {statsData.map((stat, index) => (
           <div key={index} className="bg-white p-10 rounded-lg shadow-lg">
-            <h2 className="text-3xl font-bold text-blue-600">{counts[index].toLocaleString()}</h2>
+            <h2 className="text-3xl font-bold text-[#3b5d50]">{counts[index].toLocaleString()}</h2>
             <p className="mt-2 text-gray-600">{stat.label}</p>
           </div>
         ))}

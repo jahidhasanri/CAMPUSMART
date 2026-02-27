@@ -1,21 +1,23 @@
+/* eslint-disable no-unused-vars */
 
 import { FaBorderAll } from "react-icons/fa";
 import { MdManageHistory, MdManageAccounts } from "react-icons/md";
 import { BiDish } from "react-icons/bi";
 import { AiOutlineBorderlessTable } from "react-icons/ai";
 import { useContext } from "react";
-import { AuthContext } from "../../provider/AuthProvider";
+
 import { NavLink, Outlet } from "react-router-dom";
+import { AuthContext } from "../../provider/AuthProvider";
 
 
 const DashboardLayout = () => {
-  const { user } = useContext(AuthContext);
-  const role = user?.role;
-  console.log(user)
+  const { firebaseUser,dbUser, } = useContext(AuthContext);
+  const role = dbUser?.role;
+  console.log(dbUser)
+  console.log(firebaseUser)
 
   return (
     <div className="drawer lg:drawer-open">
-      <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 
       {/* Page Content */}
       <div className="drawer-content bg flex flex-col">
