@@ -4,66 +4,59 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { updateProfile } from 'firebase/auth';
-import loginAnimation from '../json/success.json';
 import Lottie from 'lottie-react';
+import successAnimation from '../json/success.json';
 import { AuthContext } from '../provider/AuthProvider';
 
 const Register = () => {
+  const { createUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [preview, setPreview] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // New Loading State
-  
-  // Note: Check if these names match exactly what is in your AuthProvider
-  const { handelWithRegister, SetUser } = useContext(AuthContext); 
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) setPreview(URL.createObjectURL(file));
+  };
+
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-
     const form = e.target;
     const name = form.name.value;
     const email = form.email.value;
     const password = form.password.value;
     const image = form.image.files[0];
 
-    // Basic Image Validation
-    if (!image) {
-      setError("Please upload a profile image.");
-      setLoading(false);
-      return;
-    }
-
+    if (!image) return setError("Please upload a profile image.");
+    
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
     if (!passwordRegex.test(password)) {
-      setError("Password must be at least 6 characters and include uppercase, lowercase, number & special character.");
-      setLoading(false);
-      return;
+      return setError("Password must be 6+ chars with uppercase, lowercase, number & special char.");
     }
 
-    try {
-      // 1. Firebase Register
-      const result = await handelWithRegister(email, password);
+    setLoading(true);
+    setError("");
 
-      // 2. Image Upload to ImgBB
+    try {
       const formData = new FormData();
       formData.append("image", image);
-
       const imgRes = await axios.post(
-        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`, 
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`,
         formData
       );
       const imageUrl = imgRes.data.data.url;
 
-      // 3. Update Firebase Profile
+      const result = await createUser(email, password);
+
       await updateProfile(result.user, {
         displayName: name,
         photoURL: imageUrl,
       });
 
-      // 4. Save to your Backend Database
       const userInfo = {
         name,
         email,
@@ -72,86 +65,72 @@ const Register = () => {
       };
       await axios.post(`${import.meta.env.VITE_URL}/users`, userInfo);
 
-
-      toast.success("Registration successful!");
+      
+      toast.success("Registration Successful!");
       form.reset();
       setPreview(null);
       navigate("/");
 
     } catch (err) {
-      console.error("Registration error: ", err);
-      if (err.code === 'auth/email-already-in-use') {
-        setError("This email is already registered.");
-      } else {
-        toast.error(err.message || "Registration failed!");
-      }
+      console.error(err);
+      setError(err.code === 'auth/email-already-in-use' ? "Email already exists!" : err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-    }
-  };
-
   return (
-    <div className="bg-gray-200 py-10 md:py-20 flex items-center justify-center px-4">
-      <div className="w-full max-w-[1200px] h-auto grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-white rounded-lg overflow-hidden shadow-xl">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="max-w-5xl w-full bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden grid md:grid-cols-2">
         
-        {/* Form Section */}
-        <div className="h-full flex items-center justify-center bg-[#6f817b1a] p-6 md:p-10">
-          <form onSubmit={handleRegister} className="w-full max-w-md space-y-5">
-            <h2 className="text-3xl font-bold mb-4 text-center text-gray-800">Register</h2>
+        {/* Form section */}
+        <div className="p-8 lg:p-12">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-800 tracking-tight">Create Account</h2>
+            <p className="text-gray-500 mt-2">Join CampusMart today</p>
+          </div>
 
+          <form onSubmit={handleRegister} className="space-y-4">
             <div>
-              <label className="block mb-1 font-medium">Name</label>
-              <input type="text" name="name" required className="w-full px-4 py-2 border rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500" />
+              <label className="text-sm font-semibold text-gray-600 block mb-1">Full Name</label>
+              <input type="text" name="name" required placeholder="John Doe" className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-[#524ffc] focus:ring-2 focus:ring-[#524ffc20] outline-none transition" />
             </div>
 
             <div>
-              <label className="block mb-1 font-medium">Email</label>
-              <input type="email" name="email" required className="w-full px-4 py-2 border rounded-md bg-gray-50 focus:ring-2 focus:ring-blue-500" />
+              <label className="text-sm font-semibold text-gray-600 block mb-1">Email Address</label>
+              <input type="email" name="email" required placeholder="example@email.com" className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-[#524ffc] focus:ring-2 focus:ring-[#524ffc20] outline-none transition" />
             </div>
 
-            <div>
-              <label className="block mb-1 font-medium">Profile Image</label>
-              <input type="file" name="image" accept="image/*" required onChange={handleImageChange} className="w-full border rounded-md bg-gray-50" />
-              {preview && <img src={preview} alt="Preview" className="mt-2 w-20 h-20 object-cover rounded-full border-2 border-blue-500" />}
+            <div className="grid grid-cols-2 gap-4 items-end">
+              <div>
+                <label className="text-sm font-semibold text-gray-600 block mb-1">Profile Photo</label>
+                <input type="file" name="image" accept="image/*" onChange={handleImageChange} className="text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-[#524ffc10] file:text-[#524ffc] hover:file:bg-[#524ffc20] cursor-pointer" />
+              </div>
+              <div className="flex justify-center">
+                {preview ? <img src={preview} className="w-12 h-12 rounded-xl object-cover border-2 border-[#524ffc]" alt="preview" /> : <div className="w-12 h-12 rounded-xl bg-gray-100 border-2 border-dashed border-gray-300"></div>}
+              </div>
             </div>
 
             <div className="relative">
-              <label className="block mb-1 font-medium">Password</label>
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                required
-                className="w-full px-4 py-2 border rounded-md bg-gray-50 pr-10 focus:ring-2 focus:ring-blue-500"
-              />
-              <span className="absolute bottom-3 right-3 cursor-pointer text-gray-600" onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
+              <label className="text-sm font-semibold text-gray-600 block mb-1">Password</label>
+              <input type={showPassword ? "text" : "password"} name="password" required placeholder="••••••••" className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-[#524ffc] focus:ring-2 focus:ring-[#524ffc20] outline-none transition" />
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute bottom-3 right-3 text-gray-400 hover:text-gray-600">
+                {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+              </button>
             </div>
 
-            {error && <p className="text-red-600 text-sm font-semibold">{error}</p>}
+            {error && <p className="text-red-500 text-xs font-medium bg-red-50 p-2 rounded-md">{error}</p>}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full py-2 rounded-md text-white transition ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
-            >
-              {loading ? "Registering..." : "Register"}
+            <button type="submit" disabled={loading} className={`w-full py-3 rounded-lg font-bold text-white shadow-lg transition-all ${loading ? "bg-gray-300 cursor-not-allowed" : "bg-[#524ffc] hover:bg-[#433ee5] shadow-blue-200"}`}>
+              {loading ? "Processing..." : "Register Now"}
             </button>
           </form>
         </div>
 
-      
-        <div className="w-full hidden md:flex justify-center items-center p-4">
-          <Lottie animationData={loginAnimation} loop={true} style={{ maxWidth: 400 }} />
+        {/* Animation Section */}
+        <div className="hidden md:flex bg-[#f8f9fe] items-center justify-center p-10">
+          <Lottie animationData={successAnimation} loop={true} className="max-w-[350px]" />
         </div>
-
       </div>
     </div>
   );

@@ -7,13 +7,13 @@ import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { firebaseUser, handelLogout } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   // console.log(user?.photoURL);
   const navigate = useNavigate();
-  const handelSignOut = async (e) => {
+  const handleSignOut = async (e) => {
     e.preventDefault();
     try {
-      await handelLogout();
+      await logout();
       toast.success("Logout successful!");
       setTimeout(() => navigate("/login"), 1000);
     } catch (error) {
@@ -29,14 +29,12 @@ const Navbar = () => {
     { name: "ABOUT US", path: "/about" },
     { name: "CONTACT", path: "/contact" },
     { name: "DASHBOARD", path: "/dashboard" },
-    
   ];
 
   return (
     <header className="bg-[#3b5d50] text-white">
       <div className="max-w-[1300px] mx-auto px-2 py-5">
         <div className="flex items-center justify-between h-16">
-
           {/* Logo */}
           <Link to="/">
             <img
@@ -67,20 +65,18 @@ const Navbar = () => {
               className="cursor-pointer hover:text-[#a7c957]"
             />
 
-            {firebaseUser ? (
+            {user ? (
               <>
                 <img
-  src={
-    firebaseUser?.photoURL
-      ? firebaseUser.photoURL
-      : "/images/default-user.png"
-  }
-  alt="profile"
-  referrerPolicy="no-referrer"
-  className="w-[40px] h-[40px] rounded-full object-cover"
-/>
+                  src={
+                    user?.photoURL ? user.photoURL : "/images/default-user.png"
+                  }
+                  alt="profile"
+                  referrerPolicy="no-referrer"
+                  className="w-[40px] h-[40px] rounded-full object-cover"
+                />
                 <button
-                  onClick={handelSignOut}
+                  onClick={handleSignOut}
                   className="bg-red-500 px-5 py-2 rounded-lg hover:bg-red-600 transition"
                 >
                   Logout
@@ -125,10 +121,10 @@ const Navbar = () => {
             <div className="mt-6 flex flex-col gap-4">
               <TiShoppingCart size={26} />
 
-              {firebaseUser ? (
+              {user ? (
                 <button
                   onClick={() => {
-                    handelSignOut();
+                    logout();
                     setMenuOpen(false);
                   }}
                   className="bg-red-500 px-4 py-2 rounded"
