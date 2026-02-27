@@ -8,6 +8,7 @@ import Posts from "../Pages/Posts/Posts.jsx";
 import DashboardLayout from "../Pages/Dashboard/DashboardLayout.jsx";
 import Services from "../Pages/services/Services.jsx";
 import AboutUs from "../Pages/aboutUs/AboutUs.jsx";
+import ContactUs from "../Pages/ContactUs/ContactUs.jsx";
 
 
 const Router = createBrowserRouter([
@@ -42,6 +43,10 @@ const Router = createBrowserRouter([
         {
           path:"/about",
           Component:AboutUs
+        },
+        {
+          path:"/contact",
+          Component:ContactUs
         }
     ]
   },
