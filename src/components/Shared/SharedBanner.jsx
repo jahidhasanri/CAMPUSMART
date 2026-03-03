@@ -1,6 +1,6 @@
 import React from "react";
 
-const Banner = ({ title, subtitle }) => {
+const SharedBanner = ({ title, subtitle }) => {
   return (
     <div className="container mx-auto  bg-[#3b5d50] text-white py-28 px-6  md:px-20 lg:px-36 ">
       <h1 className="text-3xl md:text-5xl font-bold mb-4">{title}</h1>
@@ -13,4 +13,4 @@ const Banner = ({ title, subtitle }) => {
   );
 };
 
-export default Banner;
+export default SharedBanner;

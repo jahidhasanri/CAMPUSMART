@@ -3,7 +3,6 @@ import Home from "../Pages/Home.jsx";
 import Main from "../components/Main.jsx";
 import Login from "../Pages/Login.jsx";
 import Register from "../Pages/Register.jsx";
-import CreatePost from "../Pages/Creator/CreatePost.jsx";
 import Posts from "../Pages/Posts/Posts.jsx";
 import DashboardLayout from "../Pages/Dashboard/DashboardLayout.jsx";
 import Services from "../Pages/services/Services.jsx";
@@ -14,6 +13,9 @@ import MyPosts from "../Pages/Dashboard/User/MyPosts.jsx";
 import ManageUsers from "../Pages/Dashboard/Admin/ManageUsers.jsx";
 import ProfileSettings from "../Pages/Dashboard/Shared/ProfileSettings.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
+import CreatePost from "../Pages/Dashboard/User/CreatePost.jsx";
+import MyOrders from "../Pages/Dashboard/User/MyOrders.jsx";
+import MyWishlist from "../Pages/Dashboard/User/MyWishlist.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -35,10 +37,6 @@ const Router = createBrowserRouter([
       {
         path: "/all-posts",
         element: <Posts></Posts>,
-      },
-      {
-        path: "/create-post",
-        Component: CreatePost,
       },
       {
         path: "/services",
@@ -65,6 +63,18 @@ const Router = createBrowserRouter([
       {
         path: "posts",
         Component: MyPosts,
+      },
+      {
+        path: "create-post",
+        Component:CreatePost,
+      },
+      {
+        path: "my-orders",
+        Component:MyOrders,
+      },
+      {
+        path: "my-wishlist",
+        Component:MyWishlist,
       },
       {
         path: "manage-users",

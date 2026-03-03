@@ -2,6 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { initFlowbite } from "flowbite";
 import logo from "../../../public/images/campu_logo-removebg-preview.png";
+import { IoIosCreate } from "react-icons/io";
+import { FaBasketShopping } from "react-icons/fa6";
+import { AiFillProduct } from "react-icons/ai";
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -41,6 +44,21 @@ const navigate = useNavigate()
       name: "My Posts",
       path: "/dashboard/posts",
       icon: <ShoppingBag size={18} />,
+    },
+    {
+      name: "Create Post",
+      path: "/dashboard/create-post",
+      icon: <IoIosCreate size={18} />,
+    },
+    {
+      name: "My Orders",
+      path: "/dashboard/my-orders",
+      icon: <AiFillProduct size={18} />,
+    },
+    {
+      name: "My Wishlist",
+      path: "/dashboard/my-wishlist",
+      icon: <FaBasketShopping size={18} />,
     },
     {
       name: "Manage Users",
@@ -207,11 +225,12 @@ const navigate = useNavigate()
         </header>
 
         {/* Content Area with Fade-in effect */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
-          <div className="max-w-7xl mx-auto animate-in fade-in duration-500">
+        <main className="flex-1 overflow-y-auto  custom-scrollbar">
+          <div className="w-full animate-in fade-in duration-500">
             <Outlet />
           </div>
         </main>
+
       </div>
     </div>
   );
