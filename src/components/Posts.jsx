@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "../Hooks/useAxios";
 import { IoLocationSharp } from "react-icons/io5";
+import { toast } from "react-toastify";
+import { AuthContext } from "../provider/AuthProvider";
 
 /* ------------------ Animation Variants ------------------ */
 const containerVariants = {
@@ -21,6 +23,7 @@ const cardVariants = {
 };
 
 const Posts = () => {
+  const {user,fetchCart}=useContext(AuthContext)
   const [selectedPost, setSelectedPost] = useState(null);
   const axiosInstance = useAxios();
   const { data: posts = [], isLoading, isError } = useQuery({
@@ -30,6 +33,37 @@ const Posts = () => {
       return res.data;
     },
   });
+
+const handleAddToCart = async (post) => {
+
+  const cartItem = {
+    postId: post._id,
+    title: post.title,
+    image: post.image,
+    price: post.price,
+    location: post.location,
+    userInfo:{
+      name:user?.displayName,
+      email:user?.email,
+    }
+  };
+
+  try {
+    const res = await axiosInstance.post("/cart", cartItem);
+
+    if (res.data.insertedId) {
+      toast.success("Item added to cart");
+      fetchCart();
+    }
+
+    if (res.data.message) {
+      toast.error(res.data.message);
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   if (isLoading) return <div className="text-center my-20 font-bold text-[#3C5D50]">Loading Posts...</div>;
   if (isError) return <div className="text-center my-20 text-red-500">Failed to load posts.</div>;
@@ -171,12 +205,21 @@ const Posts = () => {
           </p>
         </div>
 
-        <a
-          href={`tel:${selectedPost.number}`}
-          className="mt-6 block w-full py-3 rounded-xl bg-[#3C5D50] text-white text-center font-semibold shadow-lg"
-        >
-          Call Seller ({selectedPost.number})
-        </a>
+        <div className="flex gap-3 mt-6">
+  <button
+    onClick={() => handleAddToCart(selectedPost)}
+    className="w-1/2 py-3 rounded-xl bg-[#3C5D50] text-white font-semibold"
+  >
+    Add To Cart
+  </button>
+
+  <a
+    href={`tel:${selectedPost.number}`}
+    className="w-1/2 py-3 rounded-xl bg-[#3C5D50] text-white text-center font-semibold"
+  >
+    Call Seller
+  </a>
+</div>
       </motion.div>
     </motion.div>
   )}

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-refresh/only-export-components */
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -9,8 +11,8 @@ import {
 } from "firebase/auth";
 import React, { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase.config";
-import axios from "axios";
 import useAxios from "../Hooks/useAxios";
+
 
 export const AuthContext = createContext(null);
 
@@ -19,6 +21,8 @@ const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+    const [cartCount, setCartCount] = useState(0);
+
   const googleProvider = new GoogleAuthProvider();
 
   const createUser = (email, password) => {
@@ -48,6 +52,20 @@ const AuthProvider = ({ children }) => {
     return signOut(auth);
   };
 
+ const fetchCart = async () => {
+  if (user?.email) {
+    const res = await axiosSecure.get(`/cart?email=${user.email}`);
+    setCartCount(res.data.length);
+  }
+};
+
+useEffect(() => {
+  fetchCart();
+}, [user]);
+  
+
+  console.log(cartCount)
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
@@ -58,6 +76,7 @@ const AuthProvider = ({ children }) => {
 
           const dbUser = res.data[0];
           setUser({ ...currentUser, ...dbUser });
+          await fetchCart();  
           // console.log(user);
         } catch (err) {
           console.error("Error fetching db user", err);
@@ -83,6 +102,8 @@ const AuthProvider = ({ children }) => {
     login,
     loginWithGoogle,
     logout,
+    fetchCart,
+    cartCount
   };
   // console.log(user);
   return (

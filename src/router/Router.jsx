@@ -16,6 +16,7 @@ import PrivateRoute from "./PrivateRoute.jsx";
 import CreatePost from "../Pages/Dashboard/User/CreatePost.jsx";
 import MyOrders from "../Pages/Dashboard/User/MyOrders.jsx";
 import MyWishlist from "../Pages/Dashboard/User/MyWishlist.jsx";
+import Cart from "../Pages/card/Card.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const Router = createBrowserRouter([
       {
         path: "/contact",
         Component: ContactUs,
+      },
+      {
+        path: "/cart",
+        Component: Cart,
       },
     ],
   },
