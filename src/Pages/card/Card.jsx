@@ -1,15 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
+
 
 import { toast } from "react-toastify";
 import { AuthContext } from "../../provider/AuthProvider";
 import useAxios from "../../Hooks/useAxios";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const { user } = useContext(AuthContext);
+  const { user ,fetchCart} = useContext(AuthContext);
   const [cartItems, setCartItems] = useState([]);
 const axiosInstance = useAxios();
+const navigate = useNavigate();
   // Load cart items
   useEffect(() => {
     if (user?.email) {
@@ -22,52 +24,103 @@ const axiosInstance = useAxios();
 
   // Increase Quantity
   const increaseQty = async (id, quantity) => {
+  try {
     const newQty = quantity + 1;
 
-    await axiosInstance.patch(`/cart/${id}`, {
+    const res = await axiosInstance.patch(`/cart/${id}`, {
       quantity: newQty,
     });
 
-    const updated = cartItems.map((item) =>
-      item._id === id ? { ...item, quantity: newQty } : item
-    );
+    if (res.data.modifiedCount > 0) {
+      const updated = cartItems.map((item) =>
+        item._id === id ? { ...item, quantity: newQty } : item
+      );
 
-    setCartItems(updated);
-  };
+      setCartItems(updated);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 
   // Decrease Quantity
-  const decreaseQty = async (id, quantity) => {
-    if (quantity <= 1) return;
+const decreaseQty = async (id, quantity) => {
+  if (quantity <= 1) return;
 
+  try {
     const newQty = quantity - 1;
 
-    await axiosInstance.patch(`/cart/${id}`, {
+    const res = await axiosInstance.patch(`/cart/${id}`, {
       quantity: newQty,
     });
 
-    const updated = cartItems.map((item) =>
-      item._id === id ? { ...item, quantity: newQty } : item
-    );
+    if (res.data.modifiedCount > 0) {
+      const updated = cartItems.map((item) =>
+        item._id === id ? { ...item, quantity: newQty } : item
+      );
 
-    setCartItems(updated);
-  };
+      setCartItems(updated);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 
   // Delete Item
   const deleteItem = async (id) => {
-    await axios.delete(`/cart/${id}`);
+    await axiosInstance.delete(`/cart/${id}`);
 
     const remaining = cartItems.filter((item) => item._id !== id);
 
     setCartItems(remaining);
 
     toast.success("Item removed from cart");
+    fetchCart();
   };
+
+
 
   // Total Price
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
+
+
+//   payment
+  const handlePayment = async () => {
+
+  if (cartItems.length === 0) {
+    toast.error("Your cart is empty");
+    return;
+  }
+
+  try {
+    const response = await axiosInstance.post("/finalOrder", {
+      orders: cartItems,
+  userInfo:{
+      name:user?.displayName,
+      email:user?.email,
+    },
+  total: totalPrice
+    });
+
+    if (response.data.url) {
+      window.location.replace(response.data.url);
+    }
+
+  } catch (error) {
+    console.error("Payment Error:", error);
+    toast.error("Payment failed!");
+  }
+};
+
+
+
 
   return (
     <div className="max-w-[1200px] mx-auto py-10 px-4">
@@ -142,13 +195,36 @@ const axiosInstance = useAxios();
               </tr>
             ))}
           </tbody>
+
+
         </table>
       </div>
-
-      {/* Total Price */}
       <div className="mt-6 text-right text-xl font-semibold">
         Total Price: ${totalPrice}
       </div>
+
+            <div className="mt-8 flex justify-center gap-10 items-center">
+
+  {/* Continue Shopping */}
+  <button
+    onClick={() => navigate("/all-posts")}
+    className="px-6 py-2 bg-gray-300 rounded hover:bg-gray-400"
+  >
+    Continue Shopping
+  </button>
+
+  {/* Proceed To Checkout */}
+  <button
+     onClick={handlePayment}
+    className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+  >
+    Proceed To Checkout
+  </button>
+
+</div>
+
+    
+
     </div>
   );
 };
