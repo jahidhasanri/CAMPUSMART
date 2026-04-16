@@ -1,24 +1,32 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Lottie from "lottie-react";
+import failAnimation from "../../../public/lotti/Payment Failed.json";
 
 const PaymentFail = () => {
   const { tranId } = useParams();
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+    <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
 
-      <h1 className="text-3xl font-bold text-red-600 mb-4">
+      {/* Animation */}
+
+      <div className="w-[450px] mb-4">
+        <Lottie animationData={failAnimation} loop={true} />
+      </div>
+
+      {/* <h1 className="text-2xl font-bold text-red-600 mb-4">
         Payment Failed ❌
-      </h1>
+      </h1> */}
 
-      <p className="text-gray-600 mb-2">
+      <p className="text-gray-600 mb-2 text-xl font-medium">
         Unfortunately, your payment could not be completed.
       </p>
 
       {tranId && (
-        <p className="mb-6">
-          Transaction ID: <span className="font-semibold">{tranId}</span>
+        <p className="mb-6 text-xl">
+          Transaction ID: <span className="text-normal text-[#3b5d50] font-medium">{tranId}</span>
         </p>
       )}
 
@@ -30,14 +38,14 @@ const PaymentFail = () => {
 
         <button
           onClick={() => navigate("/")}
-          className="px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+          className="px-6 py-2 bg-[#3b5d50] text-white rounded hover:bg-gray-600"
         >
           Back Home
         </button>
 
         <button
           onClick={() => navigate("/cart")}
-          className="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          className="px-6 py-2 bg-[#dc2626d1] text-white rounded hover:bg-[#ea1e1e]"
         >
           Try Payment Again
         </button>
