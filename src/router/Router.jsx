@@ -18,6 +18,7 @@ import MyOrders from "../Pages/Dashboard/User/MyOrders.jsx";
 import MyWishlist from "../Pages/Dashboard/User/MyWishlist.jsx";
 import Cart from "../Pages/card/Card.jsx";
 import PaymentSuccess from "../Pages/payments/PaymentSuccess.jsx";
+import PaymentFail from "../Pages/payments/PaymentsFail.jsx";
 
 const Router = createBrowserRouter([
   {
@@ -59,6 +60,10 @@ const Router = createBrowserRouter([
       {
          path: "/payment-success/:tranId",
          Component:PaymentSuccess
+      },
+      {
+         path: "/payment-fail/:tranId",
+         Component:PaymentFail
       },
       
     ],
