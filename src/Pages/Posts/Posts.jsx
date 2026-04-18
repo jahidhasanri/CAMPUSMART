@@ -1,19 +1,21 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Banner from "../../components/Shared/SharedBanner";
 import useAxios from "../../Hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import Modal from "react-modal";
 import { IoLocationSharp } from "react-icons/io5";
+import { toast } from "react-toastify";
+import { AuthContext } from "../../provider/AuthProvider";
 
-// Card animation
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
 };
 
-// Categories for filtering
+Modal.setAppElement("#root");
+
 const categories = [
   { value: "", label: "All Categories" },
   { value: "housing", label: "Housing" },
@@ -27,12 +29,11 @@ const categories = [
   { value: "events", label: "Events / Campus Life" },
 ];
 
-Modal.setAppElement("#root"); // For accessibility
-
 const PostsPage = () => {
+
+  const { user, fetchCart } = useContext(AuthContext);
   const axiosInstance = useAxios();
 
-  // Fetch posts from API
   const {
     data: posts = [],
     isLoading,
@@ -45,39 +46,76 @@ const PostsPage = () => {
     },
   });
 
-  console.log(posts);
-
-  // State
   const [selectedPost, setSelectedPost] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const postsPerPage = 12;
 
-  // Filter by category
+  // Filter
   const filteredPosts = selectedCategory
     ? posts.filter((p) => p.category === selectedCategory)
     : posts;
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+
   const currentPosts = filteredPosts.slice(
     (currentPage - 1) * postsPerPage,
-    currentPage * postsPerPage,
+    currentPage * postsPerPage
   );
+
+  // ✅ ADD TO CART FUNCTION
+  const handleAddToCart = async (post) => {
+
+    if (!user) {
+      toast.error("Please login first");
+      return;
+    }
+
+    const cartItem = {
+      postId: post._id,
+      title: post.title,
+      image: post.image,
+      price: post.price,
+      location: post.location,
+      userInfo: {
+        name: user?.displayName,
+        email: user?.email,
+      },
+    };
+
+    try {
+
+      const res = await axiosInstance.post("/cart", cartItem);
+
+      if (res.data.insertedId) {
+        toast.success("Item added to cart");
+        fetchCart();
+      }
+
+      if (res.data.message) {
+        toast.error(res.data.message);
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
+
       {/* Banner */}
       <div className="bg-[#3b5d50]">
         <Banner
           title="CampusMart Posts"
-          subtitle="Stay updated with all the latest student resources, tips, and announcements in one place."
+          subtitle="Stay updated with all the latest student resources"
         />
       </div>
 
       <div className="container mx-auto px-4 md:px-8 py-8">
-        {/* Category Filter at top-right */}
+
+        {/* Category Filter */}
         <div className="mb-6 flex justify-end">
           <select
             value={selectedCategory}
@@ -95,13 +133,11 @@ const PostsPage = () => {
           </select>
         </div>
 
-        {/* Posts Grid */}
+        {/* POSTS GRID */}
         {isLoading ? (
-          <p className="text-center text-gray-700 mt-10">Loading posts...</p>
+          <p className="text-center mt-10">Loading posts...</p>
         ) : isError ? (
           <p className="text-center text-red-500 mt-10">Error loading posts</p>
-        ) : filteredPosts.length === 0 ? (
-          <p className="text-center text-gray-700 mt-10">No posts found.</p>
         ) : (
           <motion.div
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
@@ -113,70 +149,71 @@ const PostsPage = () => {
               <motion.div
                 key={post._id}
                 variants={cardVariants}
-                className="bg-white rounded-xl shadow-md hover:shadow-xl transition flex flex-col h-full"
+                className="bg-white rounded-xl shadow-md hover:shadow-xl transition flex flex-col"
               >
-                {/* Card content */}
+
                 <img
                   src={post.image}
-                  alt={post.title}
                   className="h-44 w-full object-cover rounded-t-xl"
                 />
-                <div className="p-4 flex-grow flex flex-col justify-between">
+
+                <div className="p-4 flex flex-col justify-between flex-grow">
+
                   <div>
-                    <span className="text-[10px] uppercase tracking-wider bg-green-100 text-[#3C5D50] px-2 py-1 rounded-full font-bold">
+                    <span className="text-[10px] uppercase bg-green-100 text-[#3C5D50] px-2 py-1 rounded-full font-bold">
                       {post.category}
                     </span>
-                    <h3 className="font-semibold text-lg mt-2 leading-tight">
+
+                    <h3 className="font-semibold text-lg mt-2">
                       {post.title}
                     </h3>
+
                     <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
                       <IoLocationSharp />
-                      <a
-                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(post.location)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="truncate w-full hover:underline block"
-                        title={post.location} // Hover করলে full text দেখাবে
-                      >
-                        {post.location}
-                      </a>
+                      {post.location}
                     </p>
+
                     <p className="font-bold text-[#3C5D50] mt-2">
                       BDT {post.price}
                     </p>
                   </div>
 
                   <div className="flex gap-2 pt-4 mt-auto">
+
                     <button
                       onClick={() => setSelectedPost(post)}
-                      className="w-1/2 py-2 rounded-lg border border-[#3C5D50] text-[#3C5D50] font-medium hover:bg-green-50 transition"
+                      className="w-1/2 py-2 rounded-lg border border-[#3C5D50] text-[#3C5D50]"
                     >
                       Details
                     </button>
+
                     <a
                       href={`tel:${post.number}`}
-                      className="w-1/2 py-2 rounded-lg bg-[#3C5D50] text-white text-center font-medium hover:opacity-90 transition"
+                      className="w-1/2 py-2 rounded-lg bg-[#3C5D50] text-white text-center"
                     >
                       Contact
                     </a>
+
                   </div>
+
                 </div>
+
               </motion.div>
             ))}
           </motion.div>
         )}
 
-        {/* Pagination */}
+        {/* PAGINATION */}
         {totalPages > 1 && (
           <div className="flex justify-center gap-2 mt-8 flex-wrap">
             {Array.from({ length: totalPages }, (_, i) => (
               <button
                 key={i}
                 onClick={() => setCurrentPage(i + 1)}
-                className={`px-3 py-1 rounded m-1 ${
+                className={`px-3 py-1 rounded ${
                   currentPage === i + 1
                     ? "bg-green-600 text-white"
-                    : "bg-white text-[#3C5D50] border border-[#3C5D50]"
+                    : "border border-[#3C5D50]"
                 }`}
               >
                 {i + 1}
@@ -184,87 +221,59 @@ const PostsPage = () => {
             ))}
           </div>
         )}
+
       </div>
 
-      {/* Details Modal */}
+      {/* MODAL */}
       {selectedPost && (
         <Modal
-          isOpen={!!selectedPost}
+          isOpen={true}
           onRequestClose={() => setSelectedPost(null)}
-          className="max-w-4xl mx-auto mt-52 bg-white rounded-lg shadow-2xl p-6 outline-none"
-          overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start z-50"
+          className="max-w-2xl md:max-w-3xl mx-auto mt-40 max-h-[500px] bg-white p-6 rounded-lg"
+          overlayClassName="fixed inset-0 bg-black/60 flex justify-center"
         >
-          <div className="flex flex-col md:flex-row gap-6">
-            {/* Left side - Image */}
-            <div className="md:w-1/2 w-full">
-              <img
-                src={selectedPost.image}
-                alt={selectedPost.title}
-                className="w-full h-64 object-cover rounded-lg border border-gray-200 shadow-md"
-              />
-            </div>
 
-            {/* Right side - Content */}
-            <div className="md:w-1/2 w-full flex flex-col justify-between">
-              <div>
-                <h3 className="text-2xl font-bold text-gray-800">
-                  {selectedPost.title}
-                </h3>
+          <img
+            src={selectedPost.image}
+            className="w-full h-64 object-cover rounded-lg"
+          />
 
-                <p className="text-[#3C5D50] font-semibold mt-2">
-                  Category: {selectedPost.category}
-                </p>
+          <h2 className="text-2xl font-bold mt-4">
+            {selectedPost.title}
+          </h2>
 
-                {/* Location */}
-                <p className="text-sm text-gray-500 mt-2 flex items-center gap-1">
-                  <IoLocationSharp />
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedPost.location)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="truncate hover:underline block"
-                    title={selectedPost.location}
-                  >
-                    {selectedPost.location}
-                  </a>
-                </p>
+          <p className="mt-2">{selectedPost.description}</p>
 
-                <p className="text-gray-600 mt-3 leading-relaxed">
-                  {selectedPost.description}
-                </p>
-              </div>
+          <p className="mt-2 font-semibold text-[#3C5D50]">
+            Price: {selectedPost.price} BDT
+          </p>
 
-              {/* Posted info + price */}
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-500 italic">
-                  Posted by: {selectedPost.postedBy?.ownerName}
-                </p>
-                <p className="font-bold text-lg text-[#3C5D50] mt-1">
-                  Price: {selectedPost.price} BDT
-                </p>
-                <p className="text-sm text-gray-700 mt-1">
-                  Contact:{" "}
-                  <span className="font-medium">{selectedPost.number}</span>
-                </p>
-              </div>
+          <div className="md:flex gap-4 mt-6">
 
-              {/* Action buttons */}
-              <div className="mt-6 flex flex-col sm:flex-row gap-4">
-                <a
-                  href={`tel:${selectedPost.number}`}
-                  className="px-4 py-2 bg-[#3C5D50] text-white rounded-lg hover:opacity-90 transition text-center"
-                >
-                  Call Seller
-                </a>
-                <button
-                  onClick={() => setSelectedPost(null)}
-                  className="px-4 py-2 border border-[#3C5D50] rounded-lg hover:bg-gray-100 transition text-center"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
+            {/* ✅ ADD TO CART BUTTON */}
+            <button
+              onClick={() => handleAddToCart(selectedPost)}
+              className="px-4 py-2 bg-[#3C5D50] text-white rounded  mr-2 md:mr-0"
+            >
+              Add To Cart
+            </button>
+
+            <button
+              href={`tel:${selectedPost.number}`}
+              className="px-4 py-2 bg-[#3C5D50] text-white rounded"
+            >
+              Call Seller
+            </button>
+
+            <button
+              onClick={() => setSelectedPost(null)}
+              className="px-4 py-2 border rounded"
+            >
+              Close
+            </button>
+
           </div>
+
         </Modal>
       )}
     </div>
