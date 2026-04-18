@@ -22,16 +22,13 @@ import { toast } from "react-toastify";
 const DashboardLayout = () => {
   const { user, logout } = useContext(AuthContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-const navigate = useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     initFlowbite();
   }, []);
 
   const handleLogout = () => {
-    logout().then(
-      toast.success("Logout Succesfull......"),
-      navigate("/")
-    )
+    logout().then(toast.success("Logout Succesfull......"), navigate("/"));
   };
 
   const menuItems = [
@@ -39,6 +36,7 @@ const navigate = useNavigate()
       name: "Dashboard",
       path: "/dashboard",
       icon: <LayoutDashboard size={18} />,
+      role: "admin",
     },
     {
       name: "My Posts",
@@ -56,21 +54,28 @@ const navigate = useNavigate()
       icon: <AiFillProduct size={18} />,
     },
     {
-      name: "My Wishlist",
-      path: "/dashboard/my-wishlist",
-      icon: <FaBasketShopping size={18} />,
+      name: "Manage Posts",
+      path: "/dashboard/manage-posts",
+      icon: <Users size={18} />,
+      role: "admin",
     },
     {
       name: "Manage Users",
       path: "/dashboard/manage-users",
       icon: <Users size={18} />,
+      role: "admin",
     },
     {
-      name: "Settings",
-      path: "/dashboard/settings",
-      icon: <Settings size={18} />,
+      name: "Manage All Orders",
+      path: "/dashboard/all-orders",
+      icon: <ShoppingBag size={18} />,
+      role: "admin",
     },
   ];
+
+  const filteredMenu = menuItems.filter(
+    (item) => !item.role || item.role === user?.role,
+  );
 
   return (
     <div className="flex h-screen bg-[#F3F4F9] font-sans antialiased text-slate-900">
@@ -115,7 +120,7 @@ const navigate = useNavigate()
             <p className="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-4">
               Main Menu
             </p>
-            {menuItems.map((item) => (
+            {filteredMenu.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
@@ -230,7 +235,6 @@ const navigate = useNavigate()
             <Outlet />
           </div>
         </main>
-
       </div>
     </div>
   );

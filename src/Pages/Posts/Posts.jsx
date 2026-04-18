@@ -40,7 +40,7 @@ const PostsPage = () => {
   } = useQuery({
     queryKey: ["posts"],
     queryFn: async () => {
-      const res = await axiosInstance.get(`/all-posts`);
+      const res = await axiosInstance.get(`/all-posts?status=approved`);
       return res.data;
     },
   });

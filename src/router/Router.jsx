@@ -21,6 +21,11 @@ import PaymentSuccess from "../Pages/payments/PaymentSuccess.jsx";
 import PaymentFail from "../Pages/payments/PaymentsFail.jsx";
 import PaymentCancel from "../Pages/payments/PaymentCancle.jsx";
 
+import AdminRoute from "../Pages/Dashboard/Admin/AdminRoute.jsx";
+import ManagePosts from "../Pages/Dashboard/Admin/ManagePosts.jsx";
+import AllOrders from "../Pages/Dashboard/Admin/AllOrders.jsx";
+
+
 const Router = createBrowserRouter([
   {
     path: "/",
@@ -94,12 +99,28 @@ const Router = createBrowserRouter([
         Component:MyOrders,
       },
       {
-        path: "my-wishlist",
-        Component:MyWishlist,
+        path: "manage-users",
+        element: (
+          <AdminRoute>
+            <ManageUsers />
+          </AdminRoute>
+        ),
       },
       {
-        path: "manage-users",
-        Component: ManageUsers,
+        path: "manage-posts",
+        element: (
+          <AdminRoute>
+            <ManagePosts />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "all-orders",
+        element: (
+          <AdminRoute>
+            <AllOrders />
+          </AdminRoute>
+        ),
       },
       {
         path: "settings",

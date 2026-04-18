@@ -13,7 +13,6 @@ import React, { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase.config";
 import useAxios from "../Hooks/useAxios";
 
-
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
@@ -21,7 +20,10 @@ const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-    const [cartCount, setCartCount] = useState(0);
+  const [cartCount, setCartCount] = useState(0);
+  const [users, setUsers] = useState(null);
+  const [allorders, setAllOrders] = useState(null);
+  const [allposts, setAllPosts] = useState(null);
 
   const googleProvider = new GoogleAuthProvider();
 
@@ -52,19 +54,37 @@ const AuthProvider = ({ children }) => {
     return signOut(auth);
   };
 
- const fetchCart = async () => {
-  if (user?.email) {
-    const res = await axiosSecure.get(`/cart?email=${user.email}`);
-    setCartCount(res.data.length);
-  }
-};
+  const fetchCart = async () => {
+    if (user?.email) {
+      const res = await axiosSecure.get(`/cart?email=${user.email}`);
+      setCartCount(res.data.length);
+    }
+  };
 
+  useEffect(() => {
+    fetchCart();
+  }, [user]);
+
+  console.log(cartCount);
+// fetch all users
 useEffect(() => {
-  fetchCart();
-}, [user]);
-  
+    axiosSecure.get("/users")
+      .then(res => setUsers(res.data));
+  }, []);
 
-  console.log(cartCount)
+
+// fetch all orders
+useEffect(() => {
+    axiosSecure.get("/allorders")
+      .then(res => setAllOrders(res.data));
+  }, []);
+
+
+// fetch all posts
+useEffect(() => {
+    axiosSecure.get("/allposts")
+      .then(res => setAllPosts(res.data));
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -76,7 +96,7 @@ useEffect(() => {
 
           const dbUser = res.data[0];
           setUser({ ...currentUser, ...dbUser });
-          await fetchCart();  
+          await fetchCart();
           // console.log(user);
         } catch (err) {
           console.error("Error fetching db user", err);
@@ -103,7 +123,10 @@ useEffect(() => {
     loginWithGoogle,
     logout,
     fetchCart,
-    cartCount
+    cartCount,
+    users,
+    allorders,
+    allposts,
   };
   // console.log(user);
   return (
