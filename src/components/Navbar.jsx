@@ -6,15 +6,13 @@ import { HiMenuAlt3, HiX } from "react-icons/hi";
 import { AuthContext } from "../provider/AuthProvider";
 import { toast } from "react-toastify";
 
-
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { user, logout,cartCount } = useContext(AuthContext);
+  const { user, logout, cartCount } = useContext(AuthContext);
   const navigate = useNavigate();
-  console.log(cartCount)
+  console.log(cartCount);
   // Fetch Cart Items
-
 
   const handleSignOut = async (e) => {
     e.preventDefault();
@@ -34,14 +32,16 @@ const Navbar = () => {
     { name: "SERVICES", path: "/services" },
     { name: "ABOUT US", path: "/about" },
     { name: "CONTACT", path: "/contact" },
-    { name: "DASHBOARD", path: "/dashboard" },
+    {
+      name: "DASHBOARD",
+      path: user?.role === "admin" ? "/dashboard" : "/dashboard/posts",
+    },
   ];
 
   return (
     <header className="bg-[#3b5d50] text-white">
       <div className="max-w-[1300px] mx-auto px-2 py-5">
         <div className="flex items-center justify-between h-16">
-
           {/* Logo */}
           <Link to="/">
             <img
@@ -67,7 +67,6 @@ const Navbar = () => {
 
           {/* Cart + Auth */}
           <div className="hidden md:flex items-center gap-6">
-
             {/* Cart Icon */}
             <Link to="/cart" className="relative">
               <TiShoppingCart
@@ -88,9 +87,7 @@ const Navbar = () => {
               <>
                 <img
                   src={
-                    user?.photoURL
-                      ? user.photoURL
-                      : "/images/default-user.png"
+                    user?.photoURL ? user.photoURL : "/images/default-user.png"
                   }
                   alt="profile"
                   referrerPolicy="no-referrer"
