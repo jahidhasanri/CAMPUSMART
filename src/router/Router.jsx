@@ -24,12 +24,14 @@ import PaymentCancel from "../Pages/payments/PaymentCancle.jsx";
 import AdminRoute from "../Pages/Dashboard/Admin/AdminRoute.jsx";
 import ManagePosts from "../Pages/Dashboard/Admin/ManagePosts.jsx";
 import AllOrders from "../Pages/Dashboard/Admin/AllOrders.jsx";
+import PageNotFound from "../Pages/NotFound/PageNotFound.jsx";
 
 
 const Router = createBrowserRouter([
   {
     path: "/",
     element: <Main></Main>,
+    errorElement:<PageNotFound></PageNotFound>,
     children: [
       {
         index: true,
