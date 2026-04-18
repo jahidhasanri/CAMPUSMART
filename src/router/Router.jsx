@@ -66,15 +66,15 @@ const Router = createBrowserRouter([
         Component: Cart,
       },
       {
-         path: "/payment-success/:tranId",
+         path: "/payment/success/:tranId",
          Component:PaymentSuccess
       },
       {
-         path: "/payment-fail/:tranId",
+         path: "/payment/fail/:tranId",
          Component:PaymentFail
       },
       {
-        path:"/payment-cancel/:tranId",
+        path:"/payment/cancel/:tranId",
         Component:PaymentCancel
       }
       
