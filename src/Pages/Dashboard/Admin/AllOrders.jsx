@@ -115,7 +115,7 @@ const AllOrders = () => {
     </button>
 
     {/* Cancel (ONLY pending) */}
-    {order.orderStatus === "pending" && (
+    {order.orderStatus === "Pending" && (
       <button
         onClick={() => handleDeleteOrder(order._id)}
         className="px-3 py-1 bg-red-600 text-white rounded text-xs"
