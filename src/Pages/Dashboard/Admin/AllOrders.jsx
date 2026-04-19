@@ -14,7 +14,20 @@ const AllOrders = () => {
       return res.data;
     },
   });
-  console.log(orders);
+
+  const handleDeleteOrder = async (id) => {
+  try {
+    const res = await axiosInstance.delete(`/orders/${id}`);
+
+    if (res.data?.deletedCount > 0) {
+      toast.success("Order cancelled successfully");
+      refetch();
+    }
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to cancel order");
+  }
+};
 
   const handleStatusUpdate = async (id, status) => {
     try {
@@ -82,27 +95,36 @@ const AllOrders = () => {
                   </td>
 
                   {/* Update */}
-                  <td className="p-3">
-                    <div className="flex gap-2 justify-center">
-                      <button
-                        onClick={() =>
-                          handleStatusUpdate(order._id, "accepted")
-                        }
-                        className="px-3 py-1 bg-blue-600 text-white rounded text-xs"
-                      >
-                        Accept
-                      </button>
+               <td className="p-3">
+  <div className="flex gap-2 justify-center items-center">
 
-                      <button
-                        onClick={() =>
-                          handleStatusUpdate(order._id, "delivered")
-                        }
-                        className="px-3 py-1 bg-green-600 text-white rounded text-xs"
-                      >
-                        Delivered
-                      </button>
-                    </div>
-                  </td>
+    {/* Accept */}
+    <button
+      onClick={() => handleStatusUpdate(order._id, "accepted")}
+      className="px-3 py-1 bg-blue-600 text-white rounded text-xs"
+    >
+      Accept
+    </button>
+
+    {/* Delivered */}
+    <button
+      onClick={() => handleStatusUpdate(order._id, "delivered")}
+      className="px-3 py-1 bg-green-600 text-white rounded text-xs"
+    >
+      Delivered
+    </button>
+
+    {/* Cancel (ONLY pending) */}
+    {order.orderStatus === "pending" && (
+      <button
+        onClick={() => handleDeleteOrder(order._id)}
+        className="px-3 py-1 bg-red-600 text-white rounded text-xs"
+      >
+        Cancel
+      </button>
+    )}
+  </div>
+</td>
                 </tr>
               )),
             )}

@@ -3,6 +3,7 @@ import { FaDownload } from "react-icons/fa";
 import SharedBanner from "../../../components/Shared/SharedBanner";
 import useAxios from "../../../Hooks/useAxios";
 import { AuthContext } from "../../../provider/AuthProvider";
+import { toast } from "react-toastify";
 
 const MyOrders = () => {
   const { user } = useContext(AuthContext);
@@ -23,6 +24,20 @@ const MyOrders = () => {
 
     fetchOrders();
   }, [user]);
+
+  const handleCancelOrder = async (id) => {
+  try {
+    const res = await axiosSecure.delete(`/orders/${id}`);
+
+    if (res.data?.deletedCount > 0) {
+      setOrders((prev) => prev.filter((order) => order._id !== id));
+      toast.success("Order cancelled successfully!");
+    }
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to cancel order");
+  }
+};
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -98,16 +113,27 @@ const MyOrders = () => {
                   </td>
 
                   {/* INVOICE */}
-                  <td className="px-6 py-4 text-center">
-                    <button
-                      onClick={() => {
-                        window.location.href = `/payment-success/${order.tran_id}`;
-                      }}
-                      className="text-[#3b5d50] hover:scale-110 transition"
-                    >
-                      <FaDownload size={18} />
-                    </button>
-                  </td>
+                  <td className="px-6 py-4 text-center flex flex-col gap-2 items-center">
+  {/* Invoice */}
+  <button
+    onClick={() => {
+      window.location.href = `/payment/success/${order.tran_id}`;
+    }}
+    className="text-[#3b5d50] hover:scale-110 transition"
+  >
+    <FaDownload size={18} />
+  </button>
+
+  {/* Cancel Button (only pending) */}
+  {order.orderStatus == "Pending" && (
+    <button
+      onClick={() => handleCancelOrder(order._id)}
+      className="text-xs px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+    >
+      Cancel
+    </button>
+  )}
+</td>
                 </tr>
               ))}
             </tbody>
